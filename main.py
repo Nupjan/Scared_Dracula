@@ -1,47 +1,52 @@
 import pygame
 from random import choice
+from generate_maze import *
+
 
 # All Images
 image = pygame.image.load("Scared_Dracula/Images/garlic.jpg")
 Garlic =  pygame.transform.scale(image, (50, 30))
 background_img = pygame.image.load("Scared_Dracula/Images/background.jpg")
 
-# Creating a screen
-width, height = 800, 800
-screen = pygame.display.set_mode((width, height))
+pygame.init()
+
+# Set display mode to fullscreen
+surface = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
+game_surface = pygame.Surface(RES)
+FPS = 10
+
 pygame.display.set_caption("Scared_Dracula")
+clock = pygame.time.Clock() 
+# Creating a tile for maze
+
 # COLORS
-BLACK = (0,0,0)
-WHITE = (255,255,255)
-# Maze parameters
-cell_size = 40
-grid_width = width // cell_size
-grid_height = height // cell_size
+Black = (0,0,0)
+White = (255,255,255)
+Red = (255, 0, 0)
 
-# # Create maze grid
-# maze = [[1 for _ in range(grid_width)] for _ in range(grid_height)]
-# # Function to draw maze
-# def draw_maze():
-#     for y in range(grid_height):
-#         for x in range(grid_width):
-#             if maze[y][x] == 1:
-#                 pygame.draw.rect(screen, BLACK, (x*cell_size, y*cell_size, cell_size, cell_size))
-#             else:
-#                 pygame.draw.rect(screen, WHITE, (x*cell_size, y*cell_size, cell_size, cell_size))
- 
+maze =generate_maze()
 
-def add_player(x,y):
-    screen.blit(Garlic, (x, y))
-x, y = 400, 400
+
+
+# def add_player(x,y):
+#     screen.blit(Garlic, (x, y))
+# x, y = 400, 400
 running = True
 
 while running:
+    surface.blit(background_img, (WIDTH, 0))
+    surface.blit(game_surface, (0, 0))
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
-    screen.blit(background_img,(0,0))
-    add_player(x,y)
-    pygame.display.update()
-    
-pygame.quit()   
+            running = False  # Stop the loop
 
+    # Draw maze
+    [cell.draw(game_surface) for cell in maze]
+
+    clock.tick(FPS)
+    pygame.display.flip()
+
+pygame.quit()  # Quit pygame properly
+
+    
